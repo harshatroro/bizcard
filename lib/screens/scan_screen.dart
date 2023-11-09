@@ -1,8 +1,10 @@
+import 'package:auto_route/annotations.dart';
 import 'package:bizcard/providers/camera_provider.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+@RoutePage()
 class ScanScreen extends ConsumerStatefulWidget {
   const ScanScreen({super.key});
 
@@ -15,6 +17,17 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
   Widget build(BuildContext context) {
     final cameraController = ref.watch(cameraControllerProvider.future);
     return CupertinoPageScaffold(
+      navigationBar:  CupertinoNavigationBar(
+        middle: const Text('Scan Card'),
+        trailing:CupertinoButton(
+          padding: const EdgeInsets.all(8.0),
+          onPressed: () {},
+          child: const Icon(
+            CupertinoIcons.rectangle_on_rectangle_angled,
+            semanticLabel: 'Contacts',
+          ),
+        ),
+      ),
       child: SafeArea(
         child: FutureBuilder<CameraController>(
           future: cameraController,
@@ -23,18 +36,23 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
               return Stack(
                 children: [
                   CameraPreview(snapshot.data!),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      CupertinoButton(
-                        padding: const EdgeInsets.all(16),
-                        onPressed: () {
-                          debugPrint('Scan button pressed');
-                        },
-                        child: const Text('Scan'),
-                      )
-                    ],
+                  Positioned(
+                    bottom: 50,
+                    left: MediaQuery.of(context).size.width / 2 - 25,
+                    child: CupertinoButton(
+                      borderRadius: BorderRadius.circular(50),
+                      color: CupertinoColors.activeBlue,
+                      padding: const EdgeInsets.all(16),
+                      onPressed: () {
+                        debugPrint('Scan button pressed');
+                        //  TODO: Add scan functionality
+                        //  TODO: Add Navigation to NewContactScreen
+                      },
+                      child: const Icon(
+                        CupertinoIcons.camera,
+                        semanticLabel: 'Scan',
+                      ),
+                    ),
                   ),
                 ],
               );
