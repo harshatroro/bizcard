@@ -10,6 +10,8 @@ class Database {
   static const _columnName = 'name';
   static const _columnEmail = 'email';
   static const _columnPhone = 'phone';
+  static const _columnCreatedAt = 'created_at';
+  static const _columnLastViewedAt = 'last_viewed_at';
   late sqflite.Database db;
 
   Future<void> init() async {
@@ -28,12 +30,18 @@ class Database {
         $_columnId INTEGER PRIMARY KEY,
         $_columnName TEXT NOT NULL,
         $_columnEmail TEXT NOT NULL,
-        $_columnPhone TEXT NOT NULL
+        $_columnPhone TEXT NOT NULL,
+        $_columnCreatedAt TEXT NOT NULL,
+        $_columnLastViewedAt TEXT NOT NULL,
       )
     ''');
   }
 
   Future<int> insert(Map<String, dynamic> row) async {
+    row.addEntries([
+      MapEntry(_columnCreatedAt, DateTime.now().toIso8601String()),
+      MapEntry(_columnLastViewedAt, DateTime.now().toIso8601String()),
+    ]);
     return await db.insert(
       _tableName,
       row,
@@ -42,10 +50,19 @@ class Database {
   }
 
   Future<List<Map<String, dynamic>>> queryAllRows() async {
-    return await db.query(_tableName);
+    return await db.query(
+      _tableName,
+      orderBy: '$_columnLastViewedAt DESC',
+    );
   }
 
   Future<List<Map<String, dynamic>>> query(int id) async {
+    await db.update(
+      _tableName,
+      {_columnLastViewedAt: DateTime.now().toIso8601String()},
+      where: '$_columnId = ?',
+      whereArgs: [id],
+    );
     return await db.query(
       _tableName,
       where: '$_columnId = ?',
