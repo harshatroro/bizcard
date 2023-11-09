@@ -1,24 +1,26 @@
-import 'package:bizcard/screens/scan_screen.dart';
+import 'package:bizcard/routes/app_router.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(
-      const ProviderScope(
+      ProviderScope(
           child: MyApp(),
       ),
   );
 }
 
 class MyApp extends ConsumerWidget {
-  const MyApp({super.key});
+  final _appRouter = AppRouter();
+
+  MyApp({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return const CupertinoApp(
-      title: 'Bizcard',
-      home: ScanScreen(),
+    return CupertinoApp.router(
+      routerConfig: _appRouter.config(),
+      title: 'BizCard',
       debugShowCheckedModeBanner: false,
     );
   }
