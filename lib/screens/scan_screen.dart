@@ -1,5 +1,6 @@
-import 'package:auto_route/annotations.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:bizcard/providers/camera_provider.dart';
+import 'package:bizcard/routes/app_router.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -21,7 +22,9 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
         middle: const Text('Scan Card'),
         trailing:CupertinoButton(
           padding: const EdgeInsets.all(8.0),
-          onPressed: () {},
+          onPressed: () {
+            context.router.push(const ContactsRoute());
+          },
           child: const Icon(
             CupertinoIcons.rectangle_on_rectangle_angled,
             semanticLabel: 'Contacts',

@@ -15,6 +15,12 @@ abstract class _$AppRouter extends RootStackRouter {
 
   @override
   final Map<String, PageFactory> pagesMap = {
+    ContactsRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const ContactsScreen(),
+      );
+    },
     NewContactRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -28,6 +34,20 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
   };
+}
+
+/// generated route for
+/// [ContactsScreen]
+class ContactsRoute extends PageRouteInfo<void> {
+  const ContactsRoute({List<PageRouteInfo>? children})
+      : super(
+          ContactsRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ContactsRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for
