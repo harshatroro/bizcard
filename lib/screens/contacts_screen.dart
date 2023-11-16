@@ -1,6 +1,5 @@
 import 'package:auto_route/annotations.dart';
-import 'package:bizcard/models/contact.dart';
-import 'package:bizcard/providers/repository_provider.dart';
+import 'package:bizcard/providers/contacts_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -13,19 +12,21 @@ class ContactsScreen extends ConsumerStatefulWidget {
 }
 
 class _ContactsScreenState extends ConsumerState<ContactsScreen> {
-  List<Contact> contacts = List<Contact>.empty(growable: true);
-
   List<Widget> generateContactTiles(contacts) {
     List<Widget> contactTiles = List<Widget>.empty(growable: true);
     for (var contact in contacts) {
       contactTiles.add(
         CupertinoListTile(
+          onTap: () {
+            //   TODO: Add navigation to contact details screen
+          },
+          backgroundColorActivated: CupertinoColors.systemGrey5,
           title: Text(contact.name),
-          subtitle: Text(contact.email),
+          subtitle: Text("${contact.phone} | ${contact.email}"),
           trailing: CupertinoButton(
             child: const Icon(CupertinoIcons.right_chevron),
             onPressed: () {
-            //   TODO: Add navigation to contact details screen
+              //   TODO: Add navigation to contact details screen
             },
           ),
         ),
@@ -34,38 +35,47 @@ class _ContactsScreenState extends ConsumerState<ContactsScreen> {
     return contactTiles;
   }
 
-  void fetchContacts() async {
-    final contactsList = await ref.read(contactsListProvider.future);
-    setState(() {
-      contacts = contactsList;
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    fetchContacts();
-  }
-
   @override
   Widget build(BuildContext context) {
+    final contacts = ref.watch(contactsProvider.future);
     return CupertinoPageScaffold(
       navigationBar: const CupertinoNavigationBar(
         middle: Text('Contacts'),
       ),
       child: SafeArea(
-        child: Column(
-          mainAxisAlignment: contacts.isEmpty
-              ? MainAxisAlignment.center
-              : MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: contacts.isEmpty
-              ? const [
-                  Center(
-                    child: Text('No contacts yet'),
-                  ),
-                ]
-              : generateContactTiles(contacts)
+        child: FutureBuilder(
+          future: contacts,
+          builder: (context, snapshot) {
+            if(
+              snapshot.connectionState == ConnectionState.waiting ||
+              snapshot.connectionState == ConnectionState.active
+            ) {
+              return const Center(
+                child: CupertinoActivityIndicator(),
+              );
+            } else {
+              if(snapshot.hasError) {
+                return Center(
+                  child: Text('${snapshot.error}'),
+                );
+              } else {
+                if(snapshot.data!.isEmpty) {
+                  return const Center(
+                    child: Text(
+                      'No contacts found',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: CupertinoColors.systemGrey,
+                      ),
+                    ),
+                  );
+                }
+                return ListView(
+                  children: generateContactTiles(snapshot.data),
+                );
+              }
+            }
+          },
         ),
       ),
     );

@@ -13,4 +13,9 @@ class Repository {
     final contacts = contactsJson.map((json) => Contact.fromJson(json)).toList();
     return contacts;
   }
+
+  Future<int> saveContact(Contact contact) async {
+    final response = await database.insert(contact.toJson());
+    return response;
+  }
 }

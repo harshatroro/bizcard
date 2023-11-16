@@ -14,6 +14,19 @@ class Contact {
     required this.phone,
   });
 
+  factory Contact.empty() => Contact(
+    name: '',
+    email: '',
+    phone: '',
+  );
+
   factory Contact.fromJson(Map<String, dynamic> json) => _$ContactFromJson(json);
   Map<String, dynamic> toJson() => _$ContactToJson(this);
+
+  bool isValid() {
+    RegExp emailRegex = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$');
+    RegExp phoneRegex = RegExp(r'^[0-9]+$');
+    RegExp nameRegex = RegExp(r'^[a-zA-Z]+$');
+    return emailRegex.hasMatch(email) && phoneRegex.hasMatch(phone) && nameRegex.hasMatch(name);
+  }
 }

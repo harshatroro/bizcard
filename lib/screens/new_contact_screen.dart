@@ -1,24 +1,23 @@
-import 'package:auto_route/annotations.dart';
+import 'package:auto_route/auto_route.dart';
+import 'package:bizcard/providers/contact_provider.dart';
+import 'package:bizcard/providers/repository_provider.dart';
+import 'package:bizcard/widgets/alert_dialog.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 @RoutePage()
-class NewContactScreen extends StatefulWidget {
+class NewContactScreen extends ConsumerStatefulWidget {
   const NewContactScreen({super.key});
 
   @override
-  State<NewContactScreen> createState() => _NewContactScreenState();
+  ConsumerState<NewContactScreen> createState() => _NewContactScreenState();
 }
 
-class _NewContactScreenState extends State<NewContactScreen> {
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _phoneController = TextEditingController();
-  String name = '';
-  String email = '';
-  int phone = 0;
-
+class _NewContactScreenState extends ConsumerState<NewContactScreen> {
   @override
   Widget build(BuildContext context) {
+    final contact = ref.watch(contactProvider.notifier).state;
     return CupertinoPageScaffold(
       navigationBar:  const CupertinoNavigationBar(
         middle: Text('New Contact'),
@@ -34,10 +33,14 @@ class _NewContactScreenState extends State<NewContactScreen> {
                 padding: const EdgeInsets.all(8.0),
                 child: CupertinoTextField(
                   placeholder: 'Enter name',
-                  controller: _nameController,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(
+                      RegExp(r'^[a-zA-Z ]+$'),
+                    ),
+                  ],
                   onChanged: (String value) {
                     setState(() {
-                      name = value;
+                      contact.name = value;
                     });
                   },
                 ),
@@ -46,11 +49,10 @@ class _NewContactScreenState extends State<NewContactScreen> {
                 padding: const EdgeInsets.all(8.0),
                 child: CupertinoTextField(
                   placeholder: 'Enter email',
-                  controller: _emailController,
                   keyboardType: TextInputType.emailAddress,
                   onChanged: (String value) {
                     setState(() {
-                      email = value;
+                      contact.email = value;
                     });
                   },
                 ),
@@ -59,17 +61,14 @@ class _NewContactScreenState extends State<NewContactScreen> {
                 padding: const EdgeInsets.all(8.0),
                 child: CupertinoTextField(
                   placeholder: 'Enter phone number',
-                  controller: _phoneController,
                   keyboardType: TextInputType.number,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                  ],
                   onChanged: (String value) {
-                    try {
-                      int valueInInt = int.parse(value);
-                      setState(() {
-                        phone = valueInInt;
-                      });
-                    } on Exception catch (e) {
-                      debugPrint(e.toString());
-                    }
+                    setState(() {
+                      contact.phone = value;
+                    });
                   },
                 ),
               ),
@@ -78,7 +77,48 @@ class _NewContactScreenState extends State<NewContactScreen> {
                 child: CupertinoButton(
                   color: CupertinoColors.activeBlue,
                   padding: const EdgeInsets.all(8.0),
-                  onPressed: () {},
+                  onPressed: () {
+                    if(contact.isValid()){
+                      debugPrint("Contact is valid");
+                      final response = ref.read(repositoryProvider).saveContact(contact);
+                      response.then((value) {
+                        if(value == 0){
+                          debugPrint("Error saving contact");
+                          showCupertinoDialog(
+                            context: context,
+                            builder: (BuildContext context) => const AlertDialog(
+                              title: "Error",
+                              content: "Unable to save contact.",
+                              actionText: "Okay",
+                            ),
+                          );
+                        } else {
+                          debugPrint("Contact saved successfully");
+                          showCupertinoDialog(
+                            context: context,
+                            builder: (BuildContext context) => AlertDialog(
+                              title: "Success",
+                              content: "Contact saved successfully.",
+                              actionText: "Okay",
+                              callback: () => {
+                                context.router.back()
+                              }
+                            ),
+                          );
+                        }
+                      });
+                    } else {
+                      debugPrint("Contact is invalid");
+                      showCupertinoDialog(
+                        context: context,
+                        builder: (BuildContext context) => const AlertDialog(
+                          title: "Error",
+                          content: "Please enter valid details.",
+                          actionText: "Okay"
+                        ),
+                      );
+                    }
+                  },
                   child: const Text('Create Contact'),
                 ),
               ),

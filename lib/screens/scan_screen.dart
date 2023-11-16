@@ -49,7 +49,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
                       onPressed: () {
                         debugPrint('Scan button pressed');
                         //  TODO: Add scan functionality
-                        //  TODO: Add Navigation to NewContactScreen
+                        context.router.push(const NewContactRoute());
                       },
                       child: const Icon(
                         CupertinoIcons.camera,
