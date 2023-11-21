@@ -22,9 +22,13 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     NewContactRoute.name: (routeData) {
+      final args = routeData.argsAs<NewContactRouteArgs>();
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const NewContactScreen(),
+        child: NewContactScreen(
+          key: args.key,
+          contact: args.contact,
+        ),
       );
     },
     ScanRoute.name: (routeData) {
@@ -52,16 +56,40 @@ class ContactsRoute extends PageRouteInfo<void> {
 
 /// generated route for
 /// [NewContactScreen]
-class NewContactRoute extends PageRouteInfo<void> {
-  const NewContactRoute({List<PageRouteInfo>? children})
-      : super(
+class NewContactRoute extends PageRouteInfo<NewContactRouteArgs> {
+  NewContactRoute({
+    Key? key,
+    required Contact contact,
+    List<PageRouteInfo>? children,
+  }) : super(
           NewContactRoute.name,
+          args: NewContactRouteArgs(
+            key: key,
+            contact: contact,
+          ),
           initialChildren: children,
         );
 
   static const String name = 'NewContactRoute';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static const PageInfo<NewContactRouteArgs> page =
+      PageInfo<NewContactRouteArgs>(name);
+}
+
+class NewContactRouteArgs {
+  const NewContactRouteArgs({
+    this.key,
+    required this.contact,
+  });
+
+  final Key? key;
+
+  final Contact contact;
+
+  @override
+  String toString() {
+    return 'NewContactRouteArgs{key: $key, contact: $contact}';
+  }
 }
 
 /// generated route for

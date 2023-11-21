@@ -1,7 +1,9 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:bizcard/models/contact.dart';
 import 'package:bizcard/screens/contacts_screen.dart';
 import 'package:bizcard/screens/new_contact_screen.dart';
 import 'package:bizcard/screens/scan_screen.dart';
+import 'package:flutter/cupertino.dart';
 
 part 'app_router.gr.dart';
 

@@ -45,6 +45,10 @@ dependencies:
   sqflite: ^2.3.0
   path_provider: ^2.1.1
   path: ^1.8.3
+  googleapis: ^11.4.0
+  flutter_dotenv: ^5.1.0
+  googleapis_auth: ^1.4.1
+  connectivity_plus: ^5.0.1
 
 dev_dependencies:
   flutter_test:
@@ -77,6 +81,8 @@ flutter:
   # assets:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
+  assets:
+    - lib/.env
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
