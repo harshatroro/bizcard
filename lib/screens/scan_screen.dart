@@ -75,11 +75,14 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
                                 Contact contact = Contact.fromStrings(strings);
                                 contact.format();
                                 ref.read(contactProvider.notifier).state = contact;
-                                // ignore: use_build_context_synchronously
-                                context.router.push(NewContactRoute(contact: contact));
+                                _cameraController!.resumePreview();
                                 setState(() {
                                   loading = false;
                                 });
+                                // ignore: use_build_context_synchronously
+                                await context.router.push(NewContactRoute(contact: contact, back: () {
+                                  context.router.pop();
+                                }));
                               });
                             } else {
                               showCupertinoDialog(

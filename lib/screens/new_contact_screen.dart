@@ -9,10 +9,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 @RoutePage()
 class NewContactScreen extends ConsumerStatefulWidget {
   final Contact contact;
+  final Function back;
 
   const NewContactScreen({
     super.key,
     required this.contact,
+    required this.back,
   });
 
   @override
@@ -100,15 +102,14 @@ class _NewContactScreenState extends ConsumerState<NewContactScreen> {
                               showCupertinoDialog(
                                 context: context,
                                 builder: (BuildContext context) => AlertDialog(
-                                    title: "Success",
-                                    content: "Contact saved successfully.",
-                                    actionText: "Okay",
-                                    callback: () => {
-                                          ref
-                                              .read(contactProvider.notifier)
-                                              .state = Contact.empty(),
-                                          context.router.back()
-                                        }),
+                                  title: "Success",
+                                  content: "Contact saved successfully.",
+                                  actionText: "Okay",
+                                  callback: () {
+                                    ref.read(contactProvider.notifier).state = Contact.empty();
+                                    widget.back();
+                                  }
+                                ),
                               );
                             }
                           });
@@ -130,6 +131,7 @@ class _NewContactScreenState extends ConsumerState<NewContactScreen> {
               ],
             ),
           ),
-        ));
+        ),
+    );
   }
 }
