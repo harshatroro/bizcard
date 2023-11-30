@@ -35,7 +35,7 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
-  camera: ^0.10.5+5
+  camera: ^0.9.4+5
   flutter_riverpod: ^2.4.5
   riverpod_annotation: ^2.3.0
   auto_route: ^7.8.4
@@ -83,6 +83,7 @@ flutter:
   #   - images/a_dot_ham.jpeg
   assets:
     - lib/.env
+    - assets/mobilebert.tflite
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
