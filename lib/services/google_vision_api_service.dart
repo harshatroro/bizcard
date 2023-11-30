@@ -9,7 +9,7 @@ class GoogleVisionApiService {
     required this.visionApi,
   });
 
-  Future<List<String>> readTextFromImage(String imagePath) async {
+  Future<String> readTextFromImage(String imagePath) async {
     List<int> imageBytes = await File(imagePath).readAsBytes();
     String base64Image = base64Encode(imageBytes);
     final response = await visionApi.images.annotate(
@@ -33,9 +33,9 @@ class GoogleVisionApiService {
       final textAnnotations = response.responses![0].textAnnotations;
       if (textAnnotations != null && textAnnotations.isNotEmpty) {
         String extractedText = textAnnotations[0].description ?? 'No text found';
-        return extractedText.split('\n');
+        return extractedText;
       }
     }
-    return List<String>.empty(growable: true);
+    return '';
   }
 }

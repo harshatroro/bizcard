@@ -22,9 +22,7 @@ class Repository {
     return response;
   }
 
-  Future<List<String>> readTextFromImage(String imagePath) async {
-    List<String> strings = List<String>.empty(growable: true);
-    strings = await visionApiService.readTextFromImage(imagePath);
-    return strings;
+  Future<String> readTextFromImage(String imagePath) async {
+    return await visionApiService.readTextFromImage(imagePath);
   }
 }

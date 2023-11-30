@@ -70,9 +70,10 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
                               repository.then((value) async {
                                 XFile image = await _cameraController!.takePicture();
                                 await _cameraController!.pausePreview();
-                                final strings = await value.readTextFromImage(image.path);
-                                debugPrint("In ScanScreen, strings: ${strings.join(" ")}");
-                                Contact contact = Contact.fromStrings(strings);
+                                final string = await value.readTextFromImage(image.path);
+                                debugPrint("In ScanScreen: $string");
+                                Contact contact = Contact.empty();
+                                contact.assignValuesUsingString(string);
                                 contact.format();
                                 ref.read(contactProvider.notifier).state = contact;
                                 _cameraController!.resumePreview();

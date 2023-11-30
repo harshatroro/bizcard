@@ -1,4 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
 
 part 'contact.g.dart';
 
@@ -10,6 +12,8 @@ class Contact {
   static RegExp emailRegex = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$');
   static RegExp phoneRegex = RegExp(r'^[+]?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$');
   static RegExp nameRegex = RegExp(r'^[a-zA-Z]+$');
+
+  MethodChannel? _channel;
 
   Contact({
     required this.name,
@@ -23,12 +27,25 @@ class Contact {
     phone: '',
   );
 
-  factory Contact.fromStrings(List<String> strings) {
-    Contact contact = Contact.empty();
-    contact.email = strings.firstWhere((element) => element.contains(emailRegex), orElse: () => '');
-    contact.phone = strings.firstWhere((element) => element.contains(phoneRegex), orElse: () => '');
-    contact.name = strings.firstWhere((element) => !element.contains(emailRegex) && !element.contains(phoneRegex), orElse: () => '');
-    return contact;
+  Future<void> setupChannel(MethodChannel channel) async {
+    _channel = const MethodChannel('mobilebert');
+    final appDocumentsDirectory = await getApplicationDocumentsDirectory();
+    await _channel!.invokeMethod('initializeMobilebert', {
+      'path': '${appDocumentsDirectory.path}/assets/model.tflite',
+    });
+  }
+
+  Future<void> assignValuesUsingString(String string) async {
+    List<String> strings = string.split('\n');
+    email = strings.firstWhere((element) => element.contains(emailRegex), orElse: () => '');
+    phone = strings.firstWhere((element) => element.contains(phoneRegex), orElse: () => '');
+    List<String> names = await _channel!.invokeMethod('answer', {
+      'context': string,
+      'question': 'What is the name of the person?',
+    });
+    if(names.isNotEmpty) {
+      name = names.first;
+    }
   }
 
   factory Contact.fromJson(Map<String, dynamic> json) => _$ContactFromJson(json);
