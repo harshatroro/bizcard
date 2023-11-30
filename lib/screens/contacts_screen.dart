@@ -18,17 +18,11 @@ class _ContactsScreenState extends ConsumerState<ContactsScreen> {
       contactTiles.add(
         CupertinoListTile(
           onTap: () {
-            //   TODO: Add navigation to contact details screen
+
           },
           backgroundColorActivated: CupertinoColors.systemGrey5,
           title: Text(contact.name),
           subtitle: Text("${contact.phone} | ${contact.email}"),
-          trailing: CupertinoButton(
-            child: const Icon(CupertinoIcons.right_chevron),
-            onPressed: () {
-              //   TODO: Add navigation to contact details screen
-            },
-          ),
         ),
       );
     }

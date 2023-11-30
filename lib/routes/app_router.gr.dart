@@ -28,6 +28,7 @@ abstract class _$AppRouter extends RootStackRouter {
         child: NewContactScreen(
           key: args.key,
           contact: args.contact,
+          back: args.back,
         ),
       );
     },
@@ -60,12 +61,14 @@ class NewContactRoute extends PageRouteInfo<NewContactRouteArgs> {
   NewContactRoute({
     Key? key,
     required Contact contact,
+    required Function back,
     List<PageRouteInfo>? children,
   }) : super(
           NewContactRoute.name,
           args: NewContactRouteArgs(
             key: key,
             contact: contact,
+            back: back,
           ),
           initialChildren: children,
         );
@@ -80,15 +83,18 @@ class NewContactRouteArgs {
   const NewContactRouteArgs({
     this.key,
     required this.contact,
+    required this.back,
   });
 
   final Key? key;
 
   final Contact contact;
 
+  final Function back;
+
   @override
   String toString() {
-    return 'NewContactRouteArgs{key: $key, contact: $contact}';
+    return 'NewContactRouteArgs{key: $key, contact: $contact, back: $back}';
   }
 }
 
