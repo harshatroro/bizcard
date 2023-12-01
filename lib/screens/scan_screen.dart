@@ -73,7 +73,7 @@ class _ScanScreenState extends ConsumerState<ScanScreen> {
                                 final string = await value.readTextFromImage(image.path);
                                 debugPrint("In ScanScreen: $string");
                                 Contact contact = Contact.empty();
-                                contact.assignValuesUsingString(string);
+                                await contact.assignValuesUsingString(string);
                                 contact.format();
                                 ref.read(contactProvider.notifier).state = contact;
                                 _cameraController!.resumePreview();

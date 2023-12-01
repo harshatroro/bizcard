@@ -49,6 +49,9 @@ dependencies:
   flutter_dotenv: ^5.1.0
   googleapis_auth: ^1.4.1
   connectivity_plus: ^5.0.1
+  ffi: ^2.1.0
+  quiver: ^3.2.1
+  tflite_flutter_helper_plus: ^0.0.2
 
 dev_dependencies:
   flutter_test:
